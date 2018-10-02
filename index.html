@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Plinko</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.12.0/matter.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
+  <link rel="stylesheet" href="lib/style.css">
+</head>
+
+<body>
+  <div class="ui wrapper">
+    <div class="ui grid">
+      <div class="ui twelve wide column">
+        <div class="target-wrapper">
+          <div>
+            <div class="x-position"></div>
+            <div class="target"></div>
+            <div class="bucket-labels">
+              <div class="bucket-wrapper" id="bucket-wrapper-0">
+                <div class="score" id="bucket-0">0</div>
+                <div>Bucket #1</div>
+              </div>
+              <div class="bucket-wrapper" id="bucket-wrapper-1">
+                <div class="score" id="bucket-1">0</div>
+                <div>Bucket #2</div>
+              </div>
+              <div class="bucket-wrapper" id="bucket-wrapper-2">
+                <div class="score" id="bucket-2">0</div>
+                <div>Bucket #3</div>
+              </div>
+              <div class="bucket-wrapper" id="bucket-wrapper-3">
+                <div class="score" id="bucket-3">0</div>
+                <div>Bucket #4</div>
+              </div>
+              <div class="bucket-wrapper" id="bucket-wrapper-4">
+                <div class="score" id="bucket-4">0</div>
+                <div>Bucket #5</div>
+              </div>
+              <div class="bucket-wrapper" id="bucket-wrapper-5">
+                <div class="score" id="bucket-5">0</div>
+                <div>Bucket #6</div>
+              </div>
+              <div class="bucket-wrapper" id="bucket-wrapper-6">
+                <div class="score" id="bucket-6">0</div>
+                <div>Bucket #7</div>
+              </div>
+              <div class="bucket-wrapper" id="bucket-wrapper-7">
+                <div class="score" id="bucket-7">0</div>
+                <div>Bucket #8</div>
+              </div>
+              <div class="bucket-wrapper" id="bucket-wrapper-8">
+                <div class="score" id="bucket-8">0</div>
+                <div>Bucket #9</div>
+              </div>
+              <div class="bucket-wrapper" id="bucket-wrapper-9">
+                <div class="score" id="bucket-9">0</div>
+                <div>Bucket #10</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ui grid">
+          <div class="ui eight wide column">
+            <form class="ui ignored message form">
+              <h4>Range of Ball Bounciness (Range: 0.0 to 1.0)</h4>
+              <div class="two fields">
+                <div class="field">
+                  <label>Start</label>
+                  <input type="text" id="coef-start" value=.3 />
+                </div>
+                <div class="field">
+                  <label>End</label>
+                  <input type="text" id="coef-end" value=.35 />
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="ui eight wide column">
+            <form class="ui ignored message form">
+              <h4>Range of Ball Size (Range: 1.0 to 30.0)</h4>
+              <div class="two fields">
+                <div class="field">
+                  <label>Start</label>
+                  <input type="text" id="size-start" value=16 />
+                </div>
+                <div class="field">
+                  <label>End</label>
+                  <input type="text" id="size-end" value=16 />
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="four wide column">
+        <form class="ui ignored message form">
+          <h4>Change How Many Drop</h4>
+          <div class="field">
+            <label>Number to Drop on Click</label>
+            <input type="text" id="drop-quantity" value=10 />
+          </div>
+        </form>
+
+        <form class="ui ignored message form">
+          <h4>Drop a Bunch at Various Spots</h4>
+          <div class="field">
+            <label>Drop This Many</label>
+            <input id="scan-quantity" />
+          </div>
+          <div class="field">
+            <label>At This Spacing</label>
+            <input id="scan-spacing" />
+          </div>
+          <button class="ui primary button" id="scan">Drop!</button>
+        </form>
+
+        <form class="ui ignored message form">
+          <h4>Drop a Bunch at a Single Spot</h4>
+          <div class="field">
+            <label>Drop This Many</label>
+            <input id="spot-quantity" />
+          </div>
+          <div class="field">
+            <label>At This Spot</label>
+            <input id="spot-location" />
+          </div>
+          <button class="ui primary button" id="spot">Drop!</button>
+        </form>
+
+        <form class="ui ignored message form">
+          <div class="fields two">
+            <div class="field">
+              <button class="ui primary button" id="analyze">Analyze!</button>
+            </div>
+            <div class="field">
+              <button class="ui primary button" id="reset">Reset!</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div style="float:right;">
+        <button id="export">Export to CSV</button>
+      </div> -->
+
+
+  <script src="score.js" type="text/javascript"></script>
+  <script src="lib/index.js" type="text/javascript"></script>
+</body>
+
+</html>
