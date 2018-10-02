@@ -142,7 +142,7 @@ World.add(engine.world, [
 ]);
 Engine.run(engine);
 Render.run(render);
-
+let ballCount = 0;
 function dropBalls(position, quantity) {
   const balls = [];
 
@@ -151,8 +151,12 @@ function dropBalls(position, quantity) {
 
   const startSize = parseFloat(document.querySelector('#size-start').value);
   const endSize = parseFloat(document.querySelector('#size-end').value);
-
   for (let i = 0; i < quantity; i++) {
+    ballCount++;
+    if (ballCount > 300) {
+      ballCount--;
+      break;
+    }
     const restitution = Math.random() * (endRes - startRes) + startRes;
     const size = Math.random() * (endSize - startSize) + startSize;
     const dropX = position;
@@ -200,6 +204,7 @@ Events.on(engine, 'collisionActive', ({ pairs }) => {
       pair.bodyB.position.y > CANVAS_HEIGHT - 200
     ) {
       World.remove(engine.world, pair.bodyB);
+      ballCount--;
       const bucketId = pair.bodyA.id;
 
       _score[bucketId] = (_score[bucketId] || 0) + 1;
