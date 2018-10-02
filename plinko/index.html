@@ -64,22 +64,22 @@
         </div>
         <div class="ui grid">
           <div class="ui eight wide column">
-            <form class="ui ignored message form">
+            <form autocomplete="off" class="ui ignored message form">
               <h4>Range of Ball Bounciness (Range: 0.0 to 1.0)</h4>
               <div class="two fields">
                 <div class="field">
                   <label>Start</label>
-                  <input type="text" id="coef-start" value=.3 />
+                  <input type="text" id="coef-start" value=.5 />
                 </div>
                 <div class="field">
                   <label>End</label>
-                  <input type="text" id="coef-end" value=.35 />
+                  <input type="text" id="coef-end" value=.55 />
                 </div>
               </div>
             </form>
           </div>
           <div class="ui eight wide column">
-            <form class="ui ignored message form">
+            <form autocomplete="off" class="ui ignored message form">
               <h4>Range of Ball Size (Range: 1.0 to 30.0)</h4>
               <div class="two fields">
                 <div class="field">
@@ -97,7 +97,7 @@
       </div>
 
       <div class="four wide column">
-        <form class="ui ignored message form">
+        <form autocomplete="off" class="ui ignored message form">
           <h4>Change How Many Drop</h4>
           <div class="field">
             <label>Number to Drop on Click</label>
@@ -105,33 +105,33 @@
           </div>
         </form>
 
-        <form class="ui ignored message form">
+        <form autocomplete="off" class="ui ignored message form">
           <h4>Drop a Bunch at Various Spots</h4>
           <div class="field">
             <label>Drop This Many</label>
-            <input id="scan-quantity" />
+            <input id="scan-quantity" value=10 />
           </div>
           <div class="field">
             <label>At This Spacing</label>
-            <input id="scan-spacing" />
+            <input id="scan-spacing" value=200 />
           </div>
           <button class="ui primary button" id="scan">Drop!</button>
         </form>
 
-        <form class="ui ignored message form">
+        <form autocomplete="off" class="ui ignored message form">
           <h4>Drop a Bunch at a Single Spot</h4>
           <div class="field">
             <label>Drop This Many</label>
-            <input id="spot-quantity" />
+            <input id="spot-quantity" value=100 />
           </div>
           <div class="field">
             <label>At This Spot</label>
-            <input id="spot-location" />
+            <input id="spot-location" value=300 />
           </div>
           <button class="ui primary button" id="spot">Drop!</button>
         </form>
 
-        <form class="ui ignored message form">
+        <form autocomplete="off" class="ui ignored message form">
           <div class="fields two">
             <div class="field">
               <button class="ui primary button" id="analyze">Analyze!</button>
