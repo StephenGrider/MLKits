@@ -263,15 +263,18 @@ function updateBucketColors(_score) {
   const min = _.min(counts);
   const max = _.max(counts);
 
-  const ranks = counts.map((count, i) => {
-    const c = (count - min) / (max - min);
+  const ranks = counts.map((count, i) => ({ i, c: count }));
 
-    return { i, c };
-  });
-
-  _.sortBy(ranks, 'c').forEach(({ i, c }, j) => {
-    buckets[i * 2].render.fillStyle = COLORS[j];
-  });
+  let counter = 0;
+  const d = _.chain(ranks)
+    .sortBy('c')
+    .forEach(({ i, c }, j, collection) => {
+      if (_.get(collection, `[${j - 1}].c`) !== c) {
+        counter++;
+      }
+      buckets[i * 2].render.fillStyle = COLORS[counter - 1];
+    })
+    .value();
 }
 
 document.querySelector('#reset').addEventListener('click', function() {
