@@ -8,7 +8,7 @@
 }
 
 canvas {
-  border-top: 1px solid gray;
+  border: 1px solid gray;
 }
 
 .bucket-labels {

@@ -81,12 +81,18 @@ for (let i = 1; i < CANVAS_HEIGHT / PEG_Y - 1; i++) {
   }
 }
 
-const leftWall = Bodies.rectangle(0, CANVAS_HEIGHT / 2, 1, CANVAS_HEIGHT, {
-  isStatic: true
-});
+const leftWall = Bodies.rectangle(
+  -1,
+  CANVAS_HEIGHT / 2 + BALL_SIZE * 2,
+  1,
+  CANVAS_HEIGHT,
+  {
+    isStatic: true
+  }
+);
 const rightWall = Bodies.rectangle(
-  CANVAS_WIDTH,
-  CANVAS_HEIGHT / 2,
+  CANVAS_WIDTH + 1,
+  CANVAS_HEIGHT / 2 + BALL_SIZE * 2,
   1,
   CANVAS_HEIGHT,
   {
@@ -153,7 +159,7 @@ function dropBalls(position, quantity) {
   const endSize = parseFloat(document.querySelector('#size-end').value);
   for (let i = 0; i < quantity; i++) {
     ballCount++;
-    if (ballCount > 300) {
+    if (ballCount > 785) {
       ballCount--;
       break;
     }
