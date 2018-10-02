@@ -170,7 +170,6 @@ function dropBalls(position, quantity) {
       break;
     }
     const restitution = Math.random() * (endRes - startRes) + startRes;
-    console.log(startRes, endRes, restitution);
     const size = Math.random() * (endSize - startSize) + startSize;
     const dropX = position;
 
