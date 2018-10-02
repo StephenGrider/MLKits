@@ -152,8 +152,14 @@ let ballCount = 0;
 function dropBalls(position, quantity) {
   const balls = [];
 
-  const startRes = parseFloat(document.querySelector('#coef-start').value);
-  const endRes = parseFloat(document.querySelector('#coef-end').value);
+  const startRes = Math.min(
+    Math.abs(parseFloat(document.querySelector('#coef-start').value)),
+    1
+  );
+  const endRes = Math.min(
+    Math.abs(parseFloat(document.querySelector('#coef-end').value)),
+    1
+  );
 
   const startSize = parseFloat(document.querySelector('#size-start').value);
   const endSize = parseFloat(document.querySelector('#size-end').value);
@@ -164,6 +170,7 @@ function dropBalls(position, quantity) {
       break;
     }
     const restitution = Math.random() * (endRes - startRes) + startRes;
+    console.log(startRes, endRes, restitution);
     const size = Math.random() * (endSize - startSize) + startSize;
     const dropX = position;
 
