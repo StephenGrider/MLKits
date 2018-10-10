@@ -64,6 +64,6 @@ module.exports = function loadCSV(
       testLabels: labels.slice(0, trainSize)
     };
   } else {
-    return { features, data };
+    return { features: data, labels };
   }
 };
