@@ -123,6 +123,53 @@ class LinearRegression {
       this.gradientDescent();
     }
   }
+
+  test(testFeatures, testLabels) {
+    // convert multidimensinal arrays to tensors
+    testFeatures = tf.tensor(testFeatures);
+    testLabels = tf.tensor(testLabels);
+
+    // prepend column of 1s to testFeatures
+    testFeatures = tf.ones([testFeatures.shape[0], 1]).concat(testFeatures, 1);
+    const predictions = testFeatures.matMul(this.weights);
+
+    /**
+     * Sum of Squares Residual
+     * ------------------------
+     * ∑ (actual - predicted) ^2
+     *
+     * 1. testLabels contains all of our actual mpg values
+     * 2. we subtract our `predictions` based on feature horsepower
+     * 3. we square that difference
+     * 4. add all those squares together into a single [1,1] tensor. Note that
+     *    we don't use an axis argument in the sum() method because we want
+     *    all the values in the matrix added together into a single value as
+     *    opposed to adding all the columns together or all the rows.
+     * 5. get the value of that summation
+     *
+     */
+
+    // prettier-ignore
+    const ss_res = testLabels           // 1. 
+                    .sub(predictions)   // 2. 
+                    .pow(2)             // 3.
+                    .sum()              // 4.
+                    .get(); // 5.
+
+    /**
+     * Sum of Squares Total
+     * ------------------------
+     * ∑ (actual - average) ^2
+     *
+     * We'll follow the process outlined above for ss_res, substituting the
+     * `average` value for mpg rather than the predicted value.
+     */
+
+    const ss_tot = testLabels.sub(testLabels.mean()).pow(2).sum().get();
+
+    // return the coefficient of determination R^2
+    return 1 - ss_res / ss_tot;
+  }
 }
 
 module.exports = LinearRegression;

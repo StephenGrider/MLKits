@@ -23,4 +23,6 @@ regression.train();
  *  [0]
  * ]
  */
-console.log('Updated M is ', regression.weights.get(0, 1), 'Updated B is ', regression.weights.get(0, 0));
+// console.log('Updated M is ', regression.weights.get(0, 1), 'Updated B is ', regression.weights.get(0, 0));
+const r2 = regression.test(testFeatures, testLabels);
+console.log('R2 : ', r2);
