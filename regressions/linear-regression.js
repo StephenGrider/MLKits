@@ -169,6 +169,7 @@ class LinearRegression {
      */
     features = tf.tensor(features);
 
+    features = this.standardize(features);
     /**
      * prepend a column of `1s` to the features tensor so that it now looks
      * something like this with a [n, 2] shape:
@@ -181,7 +182,7 @@ class LinearRegression {
      */
     features = tf.ones([features.shape[0], 1]).concat(features, 1);
 
-    return this.standardize(features);
+    return features;
   }
 
   /**
