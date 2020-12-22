@@ -8,6 +8,8 @@ class LinearRegression {
     // Labels Tensor
     this.labels = tf.tensor(labels);
 
+    this.mseHistory = [];
+
     this.options = Object.assign(
       {
         learningRate: 0.1,
@@ -99,6 +101,8 @@ class LinearRegression {
   train() {
     for (let i = 0; i < this.options.iterations; i++) {
       this.gradientDescent();
+      this.recordMSE();
+      this.updateLearningRate();
     }
   }
 
@@ -200,6 +204,38 @@ class LinearRegression {
     this.variance = this.variance || variance;
 
     return features.sub(this.mean).div(this.variance.pow(0.5));
+  }
+
+  recordMSE() {
+    /**
+     * calculating MSE
+     * 1/n ∑ ((features * weights) - labels)^2)
+     */
+    // prettier-ignore
+    const mse = this.features
+                  .matMul(this.weights)
+                  .sub(this.labels)
+                  .pow(2)
+                  .sum()
+                  .div(this.features.shape[0])
+                  .get();
+
+    // place current mse at the top of the array
+    this.mseHistory.unshift(mse);
+  }
+
+  updateLearningRate() {
+    if (this.mseHistory.length < 2) {
+      return;
+    }
+
+    // if our guesses are getting worse, then decrease learning rate
+    if (this.mseHistory[0] > this.mseHistory[1]) {
+      this.options.learningRate /= 2;
+    } else {
+      // increase learning rate since our guess was an improvement
+      this.options.learningRate *= 1.05;
+    }
   }
 }
 
