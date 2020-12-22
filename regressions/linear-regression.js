@@ -3,32 +3,7 @@ const _ = require('lodash');
 
 class LinearRegression {
   constructor(features, labels, options) {
-    /**
-     * Features Tensor
-     *
-     * Initially just has a single feature (horsepower) and looks something like
-     * this with an [n, 1] shape:
-     *
-     * [
-     *  [88],
-     *  [152],
-     *  [245],
-     *  ...
-     * ]
-     *
-     */
-    this.features = tf.tensor(features);
-    /**
-     * prepend a column of `1s` to the features tensor so that it now looks
-     * something like this with a [n, 2] shape:
-     * [
-     *  [1, n],
-     *  [1, n],
-     *  [1, n],
-     *  ...
-     * ]
-     */
-    this.features = tf.ones([this.features.shape[0], 1]).concat(this.features, 1);
+    this.features = this.processFeatures(features);
 
     // Labels Tensor
     this.labels = tf.tensor(labels);
@@ -126,11 +101,8 @@ class LinearRegression {
 
   test(testFeatures, testLabels) {
     // convert multidimensinal arrays to tensors
-    testFeatures = tf.tensor(testFeatures);
+    testFeatures = this.processFeatures(testFeatures);
     testLabels = tf.tensor(testLabels);
-
-    // prepend column of 1s to testFeatures
-    testFeatures = tf.ones([testFeatures.shape[0], 1]).concat(testFeatures, 1);
     const predictions = testFeatures.matMul(this.weights);
 
     /**
@@ -170,6 +142,60 @@ class LinearRegression {
     // return the coefficient of determination R^2
     // R^2 = 1 - (ss_res / ss_tot)
     return 1 - ss_res / ss_tot;
+  }
+
+  /**
+   * processFeatures
+   * @param {array} features
+   *
+   * 1. cast features Array into a tensor
+   * 2. prepend a column of 1s
+   * 3. return new tensor.
+   */
+  processFeatures(features) {
+    /**
+     * Cast Array into Features Tensor
+     *
+     * Initially, features is passed in as a JS array and just has a single
+     * feature (horsepower) and looks something like this with an [n, 1] shape.
+     *
+     * [
+     *  [88],
+     *  [152],
+     *  [245],
+     *  ...
+     * ]
+     *
+     */
+    features = tf.tensor(features);
+
+    /**
+     * prepend a column of `1s` to the features tensor so that it now looks
+     * something like this with a [n, 2] shape:
+     * [
+     *  [1, n],
+     *  [1, n],
+     *  [1, n],
+     *  ...
+     * ]
+     */
+    features = tf.ones([features.shape[0], 1]).concat(features, 1);
+
+    return this.standardize(features);
+  }
+
+  /**
+   * Standarize
+   */
+  standardize(features) {
+    const { mean, variance } = tf.moments(features, 0);
+
+    // if instance variables are not defined, define them, otherwise, use
+    // the previously defined value.
+    this.mean = this.mean || mean;
+    this.variance = this.variance || variance;
+
+    return features.sub(this.mean).div(this.variance.pow(0.5));
   }
 }
 
