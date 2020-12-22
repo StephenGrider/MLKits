@@ -16,5 +16,11 @@ const regression = new LinearRegression(features, labels, {
 });
 
 regression.train();
-
-console.log('Updated M is ', regression.m, 'Updated B is ', regression.b);
+/**
+ * weights tensor has a [2,1] shape and looks like this:
+ * [
+ *  [0],
+ *  [0]
+ * ]
+ */
+console.log('Updated M is ', regression.weights.get(0, 1), 'Updated B is ', regression.weights.get(0, 0));
