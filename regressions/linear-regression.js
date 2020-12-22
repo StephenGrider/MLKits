@@ -20,14 +20,17 @@ class LinearRegression {
      * weights tensor
      * by convention initial guesses are given the value of either 0 or 1
      *
-     * resulting tensor has a [2,1] shape and looks like this:
+     * resulting tensor has a [n,1] shape and looks like this, where n is the
+     * number of colums present in the features tensor after adding the
+     * column of 1s :
      * [
      *  [0],
-     *  [0]
+     *  [0],
+     * ...
      * ]
      *
      */
-    this.weights = tf.zeros([2, 1]);
+    this.weights = tf.zeros([this.features.shape[1], 1]);
   }
 
   gradientDescent() {
