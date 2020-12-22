@@ -168,6 +168,7 @@ class LinearRegression {
     const ss_tot = testLabels.sub(testLabels.mean()).pow(2).sum().get();
 
     // return the coefficient of determination R^2
+    // R^2 = 1 - (ss_res / ss_tot)
     return 1 - ss_res / ss_tot;
   }
 }
