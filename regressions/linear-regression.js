@@ -35,7 +35,7 @@ class LinearRegression {
     this.weights = tf.zeros([this.features.shape[1], 1]);
   }
 
-  gradientDescent() {
+  gradientDescent(features, labels) {
     /**
      * Matrix Multiplication
      *
@@ -69,17 +69,13 @@ class LinearRegression {
      *
      * currentGuesses will then have the shape of [n,1]
      */
-    const currentGuesses = this.features.matMul(this.weights);
+    const currentGuesses = features.matMul(this.weights);
 
     /**
-     * elementwise subtraction of the `labels` from `currentGuesses`.
-     * Will this be problematic if we have more than 1 label? In other words,
-     * shouldn't this be matrix subtraction?
-     *
      * Elementwise subtraction would render `differences` with the same shape
      * that currentGuesses had of [n,1]
      */
-    const differences = currentGuesses.sub(this.labels);
+    const differences = currentGuesses.sub(labels);
 
     /**
      * transpose features from an [n, c] to a [c, n] shape.
@@ -89,21 +85,69 @@ class LinearRegression {
      * `differences` has an [n,1] shape so multiplying [c, n][n, 1] shapes works.
      *
      * Remember that tensors are immutable, so when we then divide by
-     * the number of records, we can use features.shape[0] because this.features
+     * the number of records, we can use features.shape[0] because features
      * is still the shape [n, 2]
      */
-    const slopes = this.features.transpose().matMul(differences).div(this.features.shape[0]);
+    const slopes = features.transpose().matMul(differences).div(features.shape[0]);
 
     // update the weights by multiplying the just calculated slopes by the learning rate
     this.weights = this.weights.sub(slopes.mul(this.options.learningRate));
   }
 
   train() {
+    // determine the number of batches needed to process the dataset
+    const batchQuantity = Math.floor(this.features.shape[0] / this.options.batchSize);
+
     for (let i = 0; i < this.options.iterations; i++) {
-      this.gradientDescent();
+      for (let j = 0; j < batchQuantity; j++) {
+        /**
+         * Example for start index
+         * -----------------------
+         * If 88 records and batchSize of 10, batchQuantity is 9.
+         * So: j * batchSize iterations look like this:
+         *    0 * 10 = 0
+         *    1 * 10 = 10
+         *    2 * 10 = 20
+         *    ...
+         *    8 * 10 = 80 (only having 8 records)
+         *
+         *  In this way we accurately have the record number to start with for
+         * the next batch slice
+         */
+        const startIndex = j * this.options.batchSize;
+
+        /**
+         * Slicing the features
+         * --------------------
+         * Slicing a 2D tensor requires a starting coord and a shape of the
+         * slice you want to take.
+         *
+         * tensor.slice([0,0], [10,-1]) would slice tensor from the first
+         * row,col and return 10 rows with as many columns as present.
+         *
+         * tensor.slice([10,0], [10,-1]) would slice tensor from the 10th row
+         * and first column returning 10 rows with as many columns as present.
+         *
+         * By multiplying j * batchSize we always have the correct row index and
+         * we always want the first column so [j * batchSize, 0] is perfect. By
+         * using [batchSize,-1] we always have the correct shape to extract.
+         */
+        const featuresSlice = this.features.slice([startIndex, 0], [this.options.batchSize, -1]);
+        /**
+         * We need the correct number of labels to process so that our Matricies
+         * are the right sizes for multiplication in gradientDescent.
+         */
+        const labelsSlice = this.labels.slice([startIndex, 0], [this.options.batchSize, -1]);
+        this.gradientDescent(featuresSlice, labelsSlice);
+      }
+      // make updates after processing each batch
       this.recordMSE();
       this.updateLearningRate();
     }
+  }
+
+  predict(observations) {
+    return this.processFeatures(observations).matMul(this.weights);
   }
 
   test(testFeatures, testLabels) {
@@ -153,7 +197,6 @@ class LinearRegression {
 
   /**
    * processFeatures
-   * @param {array} features
    *
    * 1. cast features Array into a tensor
    * 2. prepend a column of 1s
