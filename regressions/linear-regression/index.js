@@ -1,22 +1,29 @@
 require('@tensorflow/tfjs-node');
-const tf = require('@tensorflow/tfjs');
-const loadCSV = require('./load-csv');
+const loadCSV = require('../load-csv');
 const LinearRegression = require('./linear-regression');
 const plot = require('node-remote-plot');
-const { initial } = require('lodash');
 
-let { features, labels, testFeatures, testLabels } = loadCSV('./cars.csv', {
+let { features, labels, testFeatures, testLabels } = loadCSV('../data/Numeric-cars-corgis.csv', {
   shuffle: true,
   splitTest: 50,
-  dataColumns: ['displacement', 'horsepower', 'weight', 'acceleration'],
-  labelColumns: ['mpg'],
+  dataColumns: [
+    'Year',
+    'Driveline',
+    'Transmission',
+    'Horsepower',
+    'Torque',
+    'Displacement',
+    'Cylinder_Count',
+    'Gears_Forward',
+  ],
+  labelColumns: ['MPG_CITY'],
 });
 
 const initLR = 0.1;
 const regression = new LinearRegression(features, labels, {
   learningRate: initLR,
-  iterations: 30,
-  batchSize: 1,
+  iterations: 5,
+  batchSize: 10,
 });
 
 regression.train();
@@ -41,22 +48,20 @@ litersToCID = (liters) => {
 };
 
 /**
- * mpg, cyl, displacement, hp, wt, acc
- * [13,8,400,175,2.57,12],
- * [11,8,400,150,2.5,14],
- * [12,8,383,180,2.48,11],
- * [12,8,429,198,2.48,11],
- * [12,8,455,225,2.48,11],
- * [12,8,400,167,2.45,12],
- * [13,8,400,170,2.37,12],
+    'Year',
+    'Driveline',  (FWD, RWD, AWD, 4WD)
+    'Transmission', (manual, automatic)
+    'Horsepower',
+    'Torque',
+    'Displacement',
+    'Cylinder_Count',
+    'Gears_Forward',
  */
 vehicles = [
-  [400, 175, 2.57, 12],
-  [400, 150, 2.5, 14],
-  [383, 180, 2.48, 11],
-  [429, 198, 2.48, 11],
-  [455, 225, 2.48, 11],
-  [400, 167, 2.45, 12],
-  [400, 170, 2.37, 12],
+  [2010, 3, 2, 350, 325, 4.2, 8, 6], // 14 mpg Audi A8
+  [2009, 3, 2, 265, 243, 3.2, 6, 6], // 18 mpg Audi A5
+  [2011, 2, 1, 400, 450, 4.4, 8, 6], // 17 mpg BMW 550i
+  [2011, 1, 2, 108, 105, 1.6, 4, 4], // 25 mpg Chevy Aveo5 2LT AT
+  [2016, 1, 2, 275, 301, 1.8, 4, 6],
 ];
 regression.predict(vehicles).print();

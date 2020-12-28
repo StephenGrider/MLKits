@@ -6,6 +6,7 @@ class LogisticRegression {
     this.features = this.processFeatures(features);
 
     // Labels Tensor
+    // assuming labels have been encoded.
     this.labels = tf.tensor(labels);
 
     // MSE or Cross Entropy. In this case, for logistical regression it's Cross Entropy
@@ -34,11 +35,11 @@ class LogisticRegression {
      * ]
      *
      */
-    this.weights = tf.zeros([this.features.shape[1], 1]);
+    this.weights = tf.zeros([this.features.shape[1], this.labels.shape[1]]);
   }
 
   gradientDescent(features, labels) {
-    const currentGuesses = features.matMul(this.weights).sigmoid();
+    const currentGuesses = features.matMul(this.weights).softmax();
 
     /**
      * Elementwise subtraction would render `differences` with the same shape
@@ -119,7 +120,7 @@ class LogisticRegression {
     // prettier-ignore
     return this.processFeatures(observations)
       .matMul(this.weights)
-      .sigmoid()
+      .softmax()
       .greater(this.options.decisionBoundary) // variable decision boundary other than .5
       .cast('float32'); // treat the greater() output as a number rather than boolean
   }
@@ -199,7 +200,7 @@ class LogisticRegression {
      *        |----- term 1 -----| + |------- term 2 ------------|
      *                               (- actual + 1) * log(- guess + 1)
      */
-    const guesses = this.features.matMul(this.weights).sigmoid();
+    const guesses = this.features.matMul(this.weights).softmax();
     // prettier-ignore
     const termOne = this.labels
       .transpose()

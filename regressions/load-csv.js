@@ -5,25 +5,19 @@ const shuffleSeed = require('shuffle-seed');
 function extractColumns(data, columnNames) {
   const headers = _.first(data);
 
-  const indexes = _.map(columnNames, column => headers.indexOf(column));
-  const extracted = _.map(data, row => _.pullAt(row, indexes));
+  const indexes = _.map(columnNames, (column) => headers.indexOf(column));
+  const extracted = _.map(data, (row) => _.pullAt(row, indexes));
 
   return extracted;
 }
 
 module.exports = function loadCSV(
   filename,
-  {
-    dataColumns = [],
-    labelColumns = [],
-    converters = {},
-    shuffle = false,
-    splitTest = false
-  }
+  { dataColumns = [], labelColumns = [], converters = {}, shuffle = false, splitTest = false }
 ) {
   let data = fs.readFileSync(filename, { encoding: 'utf-8' });
-  data = _.map(data.split('\n'), d => d.split(','));
-  data = _.dropRightWhile(data, val => _.isEqual(val, ['']));
+  data = _.map(data.split('\n'), (d) => d.split(','));
+  data = _.dropRightWhile(data, (val) => _.isEqual(val, ['']));
   const headers = _.first(data);
 
   data = _.map(data, (row, index) => {
@@ -53,15 +47,13 @@ module.exports = function loadCSV(
   }
 
   if (splitTest) {
-    const trainSize = _.isNumber(splitTest)
-      ? splitTest
-      : Math.floor(data.length / 2);
+    const trainSize = _.isNumber(splitTest) ? splitTest : Math.floor(data.length / 2);
 
     return {
       features: data.slice(trainSize),
       labels: labels.slice(trainSize),
       testFeatures: data.slice(0, trainSize),
-      testLabels: labels.slice(0, trainSize)
+      testLabels: labels.slice(0, trainSize),
     };
   } else {
     return { features: data, labels };
