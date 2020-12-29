@@ -121,8 +121,7 @@ class LogisticRegression {
     return this.processFeatures(observations)
       .matMul(this.weights)
       .softmax()
-      .greater(this.options.decisionBoundary) // variable decision boundary other than .5
-      .cast('float32'); // treat the greater() output as a number rather than boolean
+      .argMax(1); // get max value across columns
   }
 
   test(testFeatures, testLabels) {
@@ -132,9 +131,13 @@ class LogisticRegression {
      * will return the probability between 0 and 1.
      */
     const predictions = this.predict(testFeatures);
-    testLabels = tf.tensor(testLabels);
+    testLabels = tf.tensor(testLabels).argMax(1);
 
-    const incorrect = predictions.sub(testLabels).abs().sum().get();
+    // prettier-ignore
+    const incorrect = predictions
+                      .notEqual(testLabels)
+                      .sum()
+                      .get();
 
     return (predictions.shape[0] - incorrect) / predictions.shape[0];
   }

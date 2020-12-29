@@ -33,12 +33,14 @@ const regress = new LogisticRegression(features, _.flatMap(labels), {
 
 regress.train();
 
-regress
-  .predict([
-    [215, 440, 2.16],
-    [95, 104, 1.19],
-    [61, 83, 1], // 32 mpg
-    [150, 200, 2.223],
-    [145, 350, 2.22], // 15 mpg
-  ])
-  .print();
+// regress
+//   .predict([
+//     [215, 440, 2.16],
+//     [95, 104, 1.19],
+//     [61, 83, 1], // 32 mpg
+//     [150, 200, 2.223],
+//     [145, 350, 2.22], // 15 mpg
+//   ])
+//   .print();
+
+console.log(regress.test(testFeatures, _.flatMap(testLabels)));
