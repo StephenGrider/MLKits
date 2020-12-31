@@ -3,7 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "memory": "node --inspect-brk ./memory.js",
+    "linear": "node ./linear-regression/index.js",
+    "logistic": "node ./logistic-regression/index.js",
+    "mnist": "node --max-old-space-size=4096 ./mnist-images/index.js",
+    "debug:mnist": "node --inspect-brk --max-old-space-size=4096 ./mnist-images/index.js"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
