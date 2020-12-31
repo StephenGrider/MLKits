@@ -134,21 +134,22 @@ class LogisticRegression {
   }
 
   test(testFeatures, testLabels) {
-    /**
-     * Since our decision boundary is .5, we can use the round() function to
-     * make our probability into predictions. Remember this.predict(features)
-     * will return the probability between 0 and 1.
-     */
-    const predictions = this.predict(testFeatures);
-    testLabels = tf.tensor(testLabels).argMax(1);
+    return tf.tidy(() => {
+      /**
+       * Since our decision boundary is .5, we can use the round() function to
+       * make our probability into predictions. Remember this.predict(features)
+       * will return the probability between 0 and 1.
+       */
+      const predictions = this.predict(testFeatures);
+      testLabels = tf.tensor(testLabels).argMax(1);
+      // prettier-ignore
+      const incorrect = predictions
+        .notEqual(testLabels)
+        .sum()
+        .get();
 
-    // prettier-ignore
-    const incorrect = predictions
-                      .notEqual(testLabels)
-                      .sum()
-                      .get();
-
-    return (predictions.shape[0] - incorrect) / predictions.shape[0];
+      return (predictions.shape[0] - incorrect) / predictions.shape[0];
+    });
   }
 
   /**
@@ -218,7 +219,7 @@ class LogisticRegression {
       // prettier-ignore
       const termOne = this.labels
       .transpose()
-      .matMul(guesses.log());
+      .matMul(guesses.add(1e-7).log());
 
       // prettier-ignore
       const termTwo = this.labels
@@ -228,6 +229,7 @@ class LogisticRegression {
       .matMul(
         guesses.mul(-1)
           .add(1)
+          .add(1e-7)
           .log()
       );
 
@@ -255,6 +257,8 @@ class LogisticRegression {
       this.options.learningRate *= 1.05;
     }
   }
+
+  // end class
 }
 
 module.exports = LogisticRegression;

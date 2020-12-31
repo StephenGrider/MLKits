@@ -37,7 +37,7 @@ function loadData() {
 }
 
 function loadTestData() {
-  const testMnistData = mnist.testing(0, 1000);
+  const testMnistData = mnist.testing(0, 500);
   const testFeatures = testMnistData.images.values.map((image) => _.flatMap(image));
   const testEncodedlabels = encodeLabelValues(testMnistData.labels.values);
   return { testFeatures, testLabels: testEncodedlabels };
@@ -49,8 +49,8 @@ function init() {
 
   return new LogisticRegression(features, labels, {
     learningRate: 1,
-    iterations: 20,
-    batchSize: 100,
+    iterations: 40,
+    batchSize: 500,
   });
 }
 function getAccuracy() {
@@ -61,7 +61,12 @@ function getAccuracy() {
 // ----- Applicatin Code -------------
 regress = init();
 regress.train();
-debugger;
 
 const accuracy = getAccuracy();
 console.log('Accuracy: ', accuracy);
+
+plot({
+  x: regress.costHistory.reverse(),
+  xLabel: 'Iterations',
+  yLabel: 'How Bad?',
+});
