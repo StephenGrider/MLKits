@@ -61,7 +61,7 @@ class LogisticRegression {
     const slopes = features.transpose().matMul(differences).div(features.shape[0]);
 
     // update the weights by multiplying the just calculated slopes by the learning rate
-    this.weights = this.weights.sub(slopes.mul(this.options.learningRate));
+    return this.weights.sub(slopes.mul(this.options.learningRate));
   }
 
   train() {
@@ -206,20 +206,22 @@ class LogisticRegression {
   }
 
   recordCost() {
-    /**
-     * calculating Cross Entropy
-     * - 1/n ∑ actual * log(guess) + (1 - actual) * log(1 - guess)
-     *        |----- term 1 -----| + |------- term 2 ------------|
-     *                               (- actual + 1) * log(- guess + 1)
-     */
-    const guesses = this.features.matMul(this.weights).softmax();
-    // prettier-ignore
-    const termOne = this.labels
+    const cost = tf.tidy(() => {
+      /**
+       * calculating Cross Entropy
+       * - 1/n ∑ actual * log(guess) + (1 - actual) * log(1 - guess)
+       *        |----- term 1 -----| + |------- term 2 ------------|
+       *                               (- actual + 1) * log(- guess + 1)
+       */
+      const guesses = this.features.matMul(this.weights).softmax();
+
+      // prettier-ignore
+      const termOne = this.labels
       .transpose()
       .matMul(guesses.log());
 
-    // prettier-ignore
-    const termTwo = this.labels
+      // prettier-ignore
+      const termTwo = this.labels
       .mul(-1)
       .add(1)
       .transpose()
@@ -229,7 +231,14 @@ class LogisticRegression {
           .log()
       );
 
-    const cost = termOne.add(termTwo).div(this.features.shape[0]).mul(-1).get(0, 0);
+      //prettier-ignore
+      return termOne
+              .add(termTwo)
+              .div(this.features.shape[0])
+              .mul(-1)
+              .get(0, 0);
+    });
+
     this.costHistory.unshift(cost);
   }
 
