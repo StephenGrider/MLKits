@@ -42,19 +42,26 @@ function loadTestData() {
   const testEncodedlabels = encodeLabelValues(testMnistData.labels.values);
   return { testFeatures, testLabels: testEncodedlabels };
 }
+// enclose the initialization so that JS Garbage Collector doesn't retain
+// unneeded elements.
+function init() {
+  const { features, labels } = loadData();
+
+  return new LogisticRegression(features, labels, {
+    learningRate: 1,
+    iterations: 20,
+    batchSize: 100,
+  });
+}
+function getAccuracy() {
+  const { testFeatures, testLabels } = loadTestData();
+  return regress.test(testFeatures, testLabels);
+}
+
 // ----- Applicatin Code -------------
-
-const { features, labels } = loadData();
-
-const regress = new LogisticRegression(features, labels, {
-  learningRate: 1,
-  iterations: 20,
-  batchSize: 100,
-});
-
+regress = init();
 regress.train();
 debugger;
 
-const { testFeatures, testLabels } = loadTestData();
-const accuracy = regress.test(testFeatures, testLabels);
+const accuracy = getAccuracy();
 console.log('Accuracy: ', accuracy);
